@@ -1,4 +1,5 @@
 from utils.board import Board
+from utils.gamestate import GameState
 
 def main():
 	board = Board(6, 7, 4) # standard connect 4 size
@@ -40,5 +41,8 @@ def main():
 
 	# Check	the game progress:
 	print("State of the game:", board.get_game_state())
+	print("State of the game:", board.get_game_state().value)
+	print("State of the game:", type(board.get_game_state().value))
+	print(GameState.IN_PROGRESS.value)
 
 main()

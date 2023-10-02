@@ -5,28 +5,37 @@ def is_terminal(state: Board):
     return state.get_game_state() in (GameState.MAX_WIN, GameState.MIN_WIN, GameState.TIE)
 
 def utility_val(state: Board):
-    score_string = state.get_game_state()
+    util_score = int
 
-    if score_string == "MAX_WIN":
-        score = GameState.MAX_WIN.value
-    elif score_string == "MIN_WIN":
-        score = GameState.MIN_WIN.value
-    elif score_string == "IN_PROGRESS":
-        score = GameState.IN_PROGRESS.value
-    elif score_string == "TIE":
-        score = GameState.TIE.value
+    if state.get_game_state().value == GameState.MAX_WIN.value:
+        util_score = int(10000 * state.get_rows() * state.get_cols() / state.moves_made_so_far)
+    elif state.get_game_state().value == GameState.MIN_WIN.value:
+        util_score = -int(10000 * state.get_rows() * state.get_cols() / state.moves_made_so_far)
+    elif state.get_game_state().value == GameState.TIE.value:
+        util_score = 0
     else:
-        score = 0
+        print("Error in utility_val")
 
-    return score
+    return util_score
+
 
 def actions(state: Board):
+    """
+    :param state: Accepts a board state
+    :return: return legal actions from that state
+    """
     legal_actions =[]
     for col in range(state.get_cols()):
         # print(col)
-        if state.is_column_full(col):
+        if not state.is_column_full(col):
             legal_actions.append(col)
     return legal_actions
 
 def result(state: Board, action: int):
+    """
+    :param state:
+    :param action:
+    :return: a copy of the board modified after an action
+    """
+
     return state.make_move(action)

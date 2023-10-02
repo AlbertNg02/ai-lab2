@@ -8,9 +8,9 @@ import math
 
 
 def minimaxSearch(state: Board, table: TranspositionTable) -> MinimaxInfo:
-    print(type(table))
-    print(type(type(table)))
-    if state in table.table.keys():
+    hashed_state = hash(state)
+    if hashed_state in table.table.keys():
+        # print(table.table.keys())
         return table.lookup(state)
     elif is_terminal(state):
         util = utility_val(state)
