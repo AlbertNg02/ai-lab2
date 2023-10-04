@@ -6,11 +6,13 @@ from utils.player import Player
 from utils.stateUtils import is_terminal, utility_val, actions, result
 import math
 
+pruning = 0
 
 def alpha_beta_search(state: Board, alpha:int, beta:int, table: TranspositionTable) -> MinimaxInfo:
+    global pruning
+
     hashed_state = hash(state)
     if hashed_state in table.table.keys():
-        # print(table.table.keys())
         return table.lookup(state)
     elif is_terminal(state):
         util = utility_val(state)
@@ -29,7 +31,7 @@ def alpha_beta_search(state: Board, alpha:int, beta:int, table: TranspositionTab
                 best_move = action
                 alpha = max(alpha, v)
             if v >= beta:
-                # TODO: pruning +=1
+                pruning += 1
                 return MinimaxInfo(v, best_move)
         info = MinimaxInfo(v, best_move)
         table.store(state, info)
@@ -46,6 +48,7 @@ def alpha_beta_search(state: Board, alpha:int, beta:int, table: TranspositionTab
                 best_move = action
                 beta = min(beta,v)
             if v <= alpha:
+                pruning += 1
                 return MinimaxInfo(v, best_move)
 
         info = MinimaxInfo(v, best_move)

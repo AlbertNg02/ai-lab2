@@ -8,8 +8,10 @@ from utils.stateUtils import is_terminal, utility_val, actions, result, is_cutof
 import math
 
 
+pruning = 0
 def alpha_beta_heuristic_search(state: Board, alpha: int, beta: int, depth: int,
                                 table: TranspositionTable, max_depth: int) -> MinimaxInfo:
+    global pruning
     hashed_state = hash(state)
     if hashed_state in table.table.keys():
         # print(table.table.keys())
@@ -36,6 +38,7 @@ def alpha_beta_heuristic_search(state: Board, alpha: int, beta: int, depth: int,
                 best_move = action
                 alpha = max(alpha, v)
             if v >= beta:
+                pruning += 1
                 return MinimaxInfo(v, best_move)
         info = MinimaxInfo(v, best_move)
         table.store(state, info)
@@ -52,6 +55,7 @@ def alpha_beta_heuristic_search(state: Board, alpha: int, beta: int, depth: int,
                 best_move = action
                 beta = min(beta, v)
             if v <= alpha:
+                pruning += 1
                 return MinimaxInfo(v, best_move)
 
         info = MinimaxInfo(v, best_move)
@@ -64,9 +68,11 @@ def game(state: Board, alpha: int, beta: int, table: TranspositionTable) -> Boar
     player = int(input("Who plays first? 1=human, 2=computer: "))
 
     while state.get_game_state().value == gamestate.GameState.IN_PROGRESS.value:
+        global pruning
         info = alpha_beta_heuristic_search(state, alpha, beta, depth=0, table=table, max_depth=max_depth)
         best_move = table.lookup(state).best_move
         print(state.to_2d_string())
+        print("Pruning while running: {}".format(pruning))
         if player == 1:
             # Human turn
             print("It is human turn")
@@ -78,6 +84,7 @@ def game(state: Board, alpha: int, beta: int, table: TranspositionTable) -> Boar
             print("It is computer turn")
             state = state.make_move(best_move)
 
+        pruning = 0
         player = 3 - player
         table = TranspositionTable()
     return state

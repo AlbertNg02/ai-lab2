@@ -15,9 +15,6 @@ def main():
     rows = int(input("Enter rows: "))
     columns = int(input("Enter columns: "))
     win_length = int(input("Enter number in a row to win: "))
-    # rows = 4
-    # columns = 4
-    # win_length = 3
     # debug = bool(input("Debug: True or False: "))
 
     board = Board(rows, columns, win_length)
@@ -35,15 +32,15 @@ def main():
             print(t)
     elif part == "B":
         st = time.time()
-        info, pruning = partB.alpha_beta_search(board, -math.inf, math.inf, table, 0)
+        info = partB.alpha_beta_search(board, -math.inf, math.inf, table)
+        print("PRUNING VALIABLE IS PRUNING:", partB.pruning)
         et = time.time()
         elapsed_time = et - st
         print('Search completed in:', elapsed_time, 'seconds')
         print("Transposition table has {} states".format(len(table.table.keys())))
-        print("Number of prunings is: {}".format(pruning))
-        table.unhashedtable = sorted(table.unhashedtable, key=lambda x: [state.moves_made_so_far for state in table.unhashedtable.keys()])
-        for t in reversed(table.unhashedtable):
-            print(t)
+        # table.unhashedtable = sorted(table.unhashedtable, key=lambda x: [state.moves_made_so_far for state in table.unhashedtable.keys()])
+        # for t in reversed(table.unhashedtable):
+        #     print(t)
     elif part == "C":
         board = partC.game(board, -math.inf, math.inf, table)
     else:
