@@ -174,3 +174,26 @@ class Board:
             if self.board[startrow + x][startcol - x] != self.board[startrow + x + 1][startcol - x - 1]:
                 return False
         return True
+    def all_match_in_a_row_heur(self, row, startcol, consec_to_win):
+        for x in range(0, consec_to_win - 1):
+            if self.board[row][startcol + x] != self.board[row][startcol + x + 1]:
+                return False
+        return True
+
+    def all_match_in_a_col_heur(self, startrow, col, consec_to_win):
+        for x in range(0, consec_to_win - 1):
+            if self.board[startrow + x][col] != self.board[startrow + x + 1][col]:
+                return False
+        return True
+
+    def all_match_in_ne_diag_heur(self, startrow, startcol, consec_to_win):
+        for x in range(0, consec_to_win - 1):
+            if self.board[startrow + x][startcol + x] != self.board[startrow + x + 1][startcol + x + 1]:
+                return False
+        return True
+
+    def all_match_in_nw_diag_heur(self, startrow, startcol, consec_to_win):
+        for x in range(0, consec_to_win - 1):
+            if self.board[startrow + x][startcol - x] != self.board[startrow + x + 1][startcol - x - 1]:
+                return False
+        return True

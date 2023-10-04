@@ -7,7 +7,7 @@ from utils.stateUtils import is_terminal, utility_val, actions, result
 import math
 
 
-def minimaxSearch(state: Board, table: TranspositionTable) -> MinimaxInfo:
+def minimax_search(state: Board, table: TranspositionTable) -> MinimaxInfo:
     hashed_state = hash(state)
     if hashed_state in table.table.keys():
         # print(table.table.keys())
@@ -22,7 +22,7 @@ def minimaxSearch(state: Board, table: TranspositionTable) -> MinimaxInfo:
         best_move = None
         for action in actions(state):
             child_state = result(state, action)
-            child_info = minimaxSearch(child_state, table)
+            child_info = minimax_search(child_state, table)
             v2 = child_info.value
             if v2 > v:
                 v = v2
@@ -35,7 +35,7 @@ def minimaxSearch(state: Board, table: TranspositionTable) -> MinimaxInfo:
         best_move = None
         for action in actions(state):
             child_state = result(state, action)
-            child_info = minimaxSearch(child_state, table)
+            child_info = minimax_search(child_state, table)
             v2 = child_info.value
             if v2 < v:
                 v = v2

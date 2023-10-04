@@ -7,7 +7,7 @@ from utils.stateUtils import is_terminal, utility_val, actions, result
 import math
 
 
-def alphaBetaSearch(state: Board, alpha:int, beta:int, table: TranspositionTable) -> MinimaxInfo:
+def alpha_beta_search(state: Board, alpha:int, beta:int, table: TranspositionTable) -> MinimaxInfo:
     hashed_state = hash(state)
     if hashed_state in table.table.keys():
         # print(table.table.keys())
@@ -22,13 +22,14 @@ def alphaBetaSearch(state: Board, alpha:int, beta:int, table: TranspositionTable
         best_move = None
         for action in actions(state):
             child_state = result(state, action)
-            child_info = alphaBetaSearch(child_state,alpha, beta, table)
+            child_info = alpha_beta_search(child_state, alpha, beta, table)
             v2 = child_info.value
             if v2 > v:
                 v = v2
                 best_move = action
                 alpha = max(alpha, v)
             if v >= beta:
+                # TODO: pruning +=1
                 return MinimaxInfo(v, best_move)
         info = MinimaxInfo(v, best_move)
         table.store(state, info)
@@ -38,7 +39,7 @@ def alphaBetaSearch(state: Board, alpha:int, beta:int, table: TranspositionTable
         best_move = None
         for action in actions(state):
             child_state = result(state, action)
-            child_info = alphaBetaSearch(child_state,alpha, beta, table)
+            child_info = alpha_beta_search(child_state, alpha, beta, table)
             v2 = child_info.value
             if v2 < v:
                 v = v2
@@ -50,4 +51,5 @@ def alphaBetaSearch(state: Board, alpha:int, beta:int, table: TranspositionTable
         info = MinimaxInfo(v, best_move)
         table.store(state, info)
         return info
+
 

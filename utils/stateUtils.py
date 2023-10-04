@@ -39,35 +39,33 @@ def result(state: Board, action: int):
     """
     return state.make_move(action)
 
-def is_cutoff(state: Board, depth: int) -> bool:
-
-    pass
+def is_cutoff(state: Board, depth: int, max_depth) -> bool:
+    return True if depth == max_depth else False
+# def getScore(state: Board):
+#     pass
 
 def evalC(state: Board):
-    pass
-
-def getScore(state: Board):
-    heuristic_consec = state.consec_to_win - 1
-    heuristic_max = 0
-    heuristic_min = 0
+    # heuristic_consec = state.consec_to_win
+    heuristic_consec = 3
+    heuristic = 0
     for r in range(0, state.num_rows):
         for c in range(0, state.num_cols):
             if state.board[r][c] == 0:
                 continue
 
-            if ((c <= state.num_cols - heuristic_consec and state.all_match_in_a_row(r, c))
-                    or (r <= state.num_rows - heuristic_consec and state.all_match_in_a_col(r, c))
-                    or (
-                            r <= state.num_rows - heuristic_consec and c <= state.num_cols - heuristic_consec and state.all_match_in_ne_diag(
-                        r, c))
-                    or (
-                            r <= state.num_rows - heuristic_consec and c - heuristic_consec >= -1 and state.all_match_in_nw_diag(
-                        r, c))):
+            if ((c <= state.num_cols - heuristic_consec and state.all_match_in_a_row_heur(r, c, heuristic_consec))
+                    or (r <= state.num_rows - heuristic_consec and state.all_match_in_a_col_heur(r, c, heuristic_consec))
+                    or (r <= state.num_rows - heuristic_consec and c <= state.num_cols - heuristic_consec and state.all_match_in_ne_diag_heur(r, c, heuristic_consec))
+                    or (r <= state.num_rows - heuristic_consec and c - heuristic_consec >= -1 and state.all_match_in_nw_diag_heur(r, c, heuristic_consec))):
 
                 if state.board[r][c] == 1:
-                    heuristic_max += 5
+                    heuristic += 5
                 elif state.board[r][c] == -1:
-                    heuristic_min -= 5
+                    heuristic -= 5
+                else:
+                    continue
 
-    
-    pass
+    # Returns the heuristic value by checking how many winning scores there are for each player
+    return heuristic
+
+
