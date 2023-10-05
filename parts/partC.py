@@ -4,7 +4,7 @@ from utils.minimax import MinimaxInfo
 from utils.board import Board
 from utils.player import Player
 from utils import gamestate
-from utils.stateUtils import is_terminal, utility_val, actions, result, is_cutoff, evalC
+from utils.stateUtils import is_terminal, utility_val, actions, result, is_cutoff, evalC, debug_log, winner_log
 import math
 
 
@@ -63,25 +63,32 @@ def alpha_beta_heuristic_search(state: Board, alpha: int, beta: int, depth: int,
         return info
 
 
-def game(state: Board, alpha: int, beta: int, table: TranspositionTable) -> Board:
+def game(state: Board, alpha: int, beta: int, table: TranspositionTable, debug: bool) -> Board:
+    global pruning
     max_depth = int(input("Number of moves to look ahead: "))
     player = int(input("Who plays first? 1=human, 2=computer: "))
 
+    if debug:
+        debug_log(table)
+
     while state.get_game_state().value == gamestate.GameState.IN_PROGRESS.value:
-        global pruning
         info = alpha_beta_heuristic_search(state, alpha, beta, depth=0, table=table, max_depth=max_depth)
-        best_move = table.lookup(state).best_move
+
+        best = table.lookup(state)
+        best_move = best.best_move
+        minimax_value = best.value
+
         print(state.to_2d_string())
-        print("Pruning while running: {}".format(pruning))
+        winner_log(info)
+        print("The tree was pruned {} times".format(pruning))
+        print("Transposition table has {} states".format(len(table.table.keys())))
+        print("It is {}'s turn".format(state.player_to_move))
+        print("Minimax value for this state: {} and The best move is: {}".format(minimax_value, best_move))
         if player == 1:
-            # Human turn
-            print("It is human turn")
-            print("The best move is: {}".format(best_move))
-            player_move = int(int(input("Enter move: ")))
+            player_move = int(input("Human Enter move: "))
             state = state.make_move(player_move)
         else:
-            # Computer turn
-            print("It is computer turn")
+            print("Computer choose move: {}".format(best_move))
             state = state.make_move(best_move)
 
         pruning = 0

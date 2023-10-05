@@ -1,5 +1,7 @@
 from utils.gamestate import GameState
 from utils.board import Board
+from utils.table import TranspositionTable
+from utils.minimax import MinimaxInfo
 
 def is_terminal(state: Board):
     return state.get_game_state() in (GameState.MAX_WIN, GameState.MIN_WIN, GameState.TIE)
@@ -39,8 +41,24 @@ def result(state: Board, action: int):
     """
     return state.make_move(action)
 
+def debug_log(table: TranspositionTable):
+    table.unhashedtable = sorted(table.unhashedtable,
+                                 key=lambda x: [state.moves_made_so_far for state in table.unhashedtable.keys()])
+    for t in reversed(table.unhashedtable):
+        best_move = table.lookup(t).best_move
+        value = table.lookup(t).value
+        print("{} ---> Best move: {};  Value:  {}".format(t, best_move, value))
+
+def winner_log(info: MinimaxInfo):
+    if info.value > 0:
+        print("If both play optimally, First Player has a guaranteed win")
+    elif info.value < 0:
+        print("If both play optimally, Second Player has a guaranteed win")
+    else:
+        print("If both play optimally, the game is expected to end in a draw.")
+
 def is_cutoff(state: Board, depth: int, max_depth) -> bool:
-    return True if depth == max_depth else False
+    return depth == max_depth
 # def getScore(state: Board):
 #     pass
 
